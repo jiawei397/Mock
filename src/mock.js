@@ -1,13 +1,11 @@
 /* global require, module, window */
-var Handler = require('./mock/handler')
-var Util = require('./mock/util')
-var Random = require('./mock/random')
-var RE = require('./mock/regexp')
-var toJSONSchema = require('./mock/schema')
-var valid = require('./mock/valid')
-
-var XHR
-if (typeof window !== 'undefined') XHR = require('./mock/xhr')
+import Handler from './mock/handler.js'
+import Util from './mock/util.js';
+import Random from './mock/random/index.js'
+import RE from './mock/regexp/index.js'
+import toJSONSchema from './mock/schema/index.js'
+import valid from './mock/valid/index.js'
+import XHR from './mock/xhr/index.js';
 
 /*!
     Mock - 模拟请求 & 模拟数据
@@ -64,4 +62,4 @@ Mock.mock = function(rurl, rtype, template) {
     return Mock
 }
 
-module.exports = Mock
+export default Mock

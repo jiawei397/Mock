@@ -3,8 +3,8 @@
 
     http://www.lipsum.com/
 */
-var Basic = require('./basic')
-var Helper = require('./helper')
+import Basic from './basic.js'
+import Helper from './helper.js'
 
 function range(defaultMin, defaultMax, min, max) {
     return min === undefined ? Basic.natural(defaultMin, defaultMax) : // ()
@@ -12,7 +12,7 @@ function range(defaultMin, defaultMax, min, max) {
         Basic.natural(parseInt(min, 10), parseInt(max, 10)) // ( min, max )
 }
 
-module.exports = {
+export default {
     // 随机生成一段文本。
     paragraph: function(min, max) {
         var len = range(3, 7, min, max)
@@ -22,7 +22,7 @@ module.exports = {
         }
         return result.join(' ')
     },
-    // 
+    //
     cparagraph: function(min, max) {
         var len = range(3, 7, min, max)
         var result = []

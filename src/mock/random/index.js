@@ -1,24 +1,34 @@
 /*
     ## Mock.Random
-    
+
     工具类，用于生成各种随机数据。
 */
 
-var Util = require('../util')
+import Util from '../util.js';
+import basic from './basic.js';
+import date from './date.js';
+import image from './image.js';
+import color from './color.js';
+import text from './text.js';
+import name from './name.js';
+import web from './web.js';
+import address from './address.js';
+import helper from './helper.js';
+import misc from './misc.js';
 
 var Random = {
     extend: Util.extend
 }
 
-Random.extend(require('./basic'))
-Random.extend(require('./date'))
-Random.extend(require('./image'))
-Random.extend(require('./color'))
-Random.extend(require('./text'))
-Random.extend(require('./name'))
-Random.extend(require('./web'))
-Random.extend(require('./address'))
-Random.extend(require('./helper'))
-Random.extend(require('./misc'))
+Random.extend(basic)
+Random.extend(date)
+Random.extend(image)
+Random.extend(color)
+Random.extend(text)
+Random.extend(name)
+Random.extend(web)
+Random.extend(address)
+Random.extend(helper)
+Random.extend(misc)
 
-module.exports = Random
+export default Random

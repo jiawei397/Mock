@@ -13,9 +13,9 @@
     西南   重庆市 四川省 贵州省 云南省 西藏自治区
     西北   陕西省 甘肃省 青海省 宁夏回族自治区 新疆维吾尔自治区
     港澳台 香港特别行政区 澳门特别行政区 台湾省
-    
+
     **排序**
-    
+
     ```js
     var map = {}
     _.each(_.keys(REGIONS),function(id){
@@ -4034,10 +4034,10 @@ function tree(list) {
 
     var result = []
     for (var ii = 0; ii < list.length; ii++) {
-        item = list[ii]
-
         if (!item) continue
-            /* jshint -W041 */
+        /* jshint -W041 */
+
+        item = list[ii]
         if (item.pid == undefined && item.parentId == undefined) {
             result.push(item)
             continue
@@ -4065,4 +4065,4 @@ var DICT_FIXED = function() {
     return tree(fixed)
 }()
 
-module.exports = DICT_FIXED
+export default DICT_FIXED;

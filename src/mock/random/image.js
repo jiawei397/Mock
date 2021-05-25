@@ -2,7 +2,7 @@
 /*
     ## Image
 */
-module.exports = {
+export default {
     // 常见的广告宽高
     _adSize: [
         '300x250', '250x250', '240x400', '336x280', '180x150',
@@ -23,7 +23,7 @@ module.exports = {
 
         替代图片源
             http://fpoimg.com/
-        参考自 
+        参考自
             http://rensanning.iteye.com/blog/1933310
             http://code.tutsplus.com/articles/the-top-8-placeholders-for-web-designers--net-19485
     */

@@ -5,9 +5,9 @@
 
     > [JSON Schema](http://json-schema.org/)
  */
-var Constant = require('../constant')
-var Util = require('../util')
-var Parser = require('../parser')
+import Constant from '../constant.js';
+import Util from '../util.js';
+import {parse} from '../parser.js';
 
 function toJSONSchema(template, name, path /* Internal Use Only */ ) {
     // type rule properties items
@@ -16,7 +16,7 @@ function toJSONSchema(template, name, path /* Internal Use Only */ ) {
         name: typeof name === 'string' ? name.replace(Constant.RE_KEY, '$1') : name,
         template: template,
         type: Util.type(template), // 可能不准确，例如 { 'name|1': [{}, {} ...] }
-        rule: Parser.parse(name)
+        rule: parse(name)
     }
     result.path = path.slice(0)
     result.path.push(name === undefined ? 'ROOT' : result.name)
@@ -44,4 +44,4 @@ function toJSONSchema(template, name, path /* Internal Use Only */ ) {
 
 }
 
-module.exports = toJSONSchema
+export default toJSONSchema

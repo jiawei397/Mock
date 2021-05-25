@@ -1,1 +1,2 @@
-module.exports = require('./schema')
+import Schema from './schema.js';
+export default Schema;

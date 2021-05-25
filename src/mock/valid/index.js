@@ -1,1 +1,2 @@
-module.exports = require('./valid')
+import Valid from './valid.js';
+export default Valid;

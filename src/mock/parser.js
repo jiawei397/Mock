@@ -4,7 +4,7 @@
 	解析数据模板（属性名部分）。
 
 	* Parser.parse( name )
-		
+
 		```json
 		{
 			parameters: [ name, inc, range, decimal ],
@@ -22,12 +22,10 @@
 		```
  */
 
-var Constant = require('./constant')
-var Random = require('./random/')
+import Constant from './constant.js'
+import Random from './random/index.js'
 
-/* jshint -W041 */
-module.exports = {
-	parse: function(name) {
+export function parse(name) {
 		name = name == undefined ? '' : (name + '')
 
 		var parameters = (name || '').match(Constant.RE_KEY)
@@ -68,4 +66,3 @@ module.exports = {
 
 		return {}
 	}
-}

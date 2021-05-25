@@ -9,7 +9,7 @@
         var bg_colour = Math.floor(Math.random() * 16777215).toString(16);
         bg_colour = "#" + ("000000" + bg_colour).slice(-6);
         document.bgColor = bg_colour;
-    
+
     http://martin.ankerl.com/2009/12/09/how-to-create-random-colors-programmatically/
         Creating random colors is actually more difficult than it seems. The randomness itself is easy, but aesthetically pleasing randomness is more difficult.
         https://github.com/devongovett/color-generator
@@ -29,7 +29,7 @@
 
     http://tool.c7sky.com/webcolor
         网页设计常用色彩搭配表
-    
+
     https://github.com/One-com/one-color
         An OO-based JavaScript color parser/computation toolkit with support for RGB, HSV, HSL, CMYK, and alpha channels.
         API 很赞
@@ -61,7 +61,7 @@
             color += letters[Math.floor(Math.random() * 16)]
         }
         return color
-    
+
         // 随机生成一个无脑的颜色，格式为 '#RRGGBB'。
         // _brainlessColor()
         var color = Math.floor(
@@ -72,10 +72,10 @@
         return color.toUpperCase()
 */
 
-var Convert = require('./color_convert')
-var DICT = require('./color_dict')
+import Convert from './color_convert.js'
+import DICT from './color_dict.js'
 
-module.exports = {
+export default {
     // 随机生成一个有吸引力的颜色，格式为 '#RRGGBB'。
     color: function(name) {
         if (name || DICT[name]) return DICT[name].nicer

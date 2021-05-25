@@ -1,22 +1,22 @@
 /*
     ## Web
 */
-module.exports = {
+export default {
     /*
         随机生成一个 URL。
 
         [URL 规范](http://www.w3.org/Addressing/URL/url-spec.txt)
-            http                    Hypertext Transfer Protocol 
-            ftp                     File Transfer protocol 
-            gopher                  The Gopher protocol 
-            mailto                  Electronic mail address 
-            mid                     Message identifiers for electronic mail 
-            cid                     Content identifiers for MIME body part 
-            news                    Usenet news 
-            nntp                    Usenet news for local NNTP access only 
-            prospero                Access using the prospero protocols 
+            http                    Hypertext Transfer Protocol
+            ftp                     File Transfer protocol
+            gopher                  The Gopher protocol
+            mailto                  Electronic mail address
+            mid                     Message identifiers for electronic mail
+            cid                     Content identifiers for MIME body part
+            news                    Usenet news
+            nntp                    Usenet news for local NNTP access only
+            prospero                Access using the prospero protocols
             telnet rlogin tn3270    Reference to interactive sessions
-            wais                    Wide Area Information Servers 
+            wais                    Wide Area Information Servers
     */
     url: function(protocol, host) {
         return (protocol || this.protocol()) + '://' + // protocol?

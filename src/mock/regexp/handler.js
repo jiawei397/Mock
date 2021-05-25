@@ -53,10 +53,10 @@
         null-character      \o      NUL 字符
  */
 
-var Util = require('../util')
-var Random = require('../random/')
+import Util from '../util.js';
+import Random from '../random/index.js';
     /*
-        
+
     */
 var Handler = {
     extend: Util.extend
@@ -303,7 +303,7 @@ Handler.extend({
         return Random.integer(min, max)
     },
     /*
-        
+
     */
     charset: function(node, result, cache) {
         // node.invert
@@ -389,4 +389,4 @@ Handler.extend({
     }
 })
 
-module.exports = Handler
+export default Handler

@@ -1,7 +1,7 @@
 /*
     ## Utilities
 */
-var Util = {}
+const Util = {}
 
 Util.extend = function extend() {
     var target = arguments[0] || {},
@@ -101,13 +101,13 @@ Util.values = function(obj) {
         var tpl = Mock.heredoc(function() {
             /*!
         {{email}}{{age}}
-        <!-- Mock { 
+        <!-- Mock {
             email: '@EMAIL',
             age: '@INT(1,100)'
         } -->
             *\/
         })
-    
+
     **相关阅读**
     * [Creating multiline strings in JavaScript](http://stackoverflow.com/questions/805107/creating-multiline-strings-in-javascript)、
 */
@@ -123,4 +123,4 @@ Util.heredoc = function heredoc(fn) {
 
 Util.noop = function() {}
 
-module.exports = Util
+export default Util;

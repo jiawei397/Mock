@@ -1,14 +1,14 @@
-/* 
+/*
     ## Handler
 
     处理数据模板。
-    
+
     * Handler.gen( template, name?, context? )
 
         入口方法。
 
     * Data Template Definition, DTD
-        
+
         处理数据模板定义。
 
         * Handler.array( options )
@@ -18,7 +18,7 @@
         * Handler.string( options )
         * Handler.function( options )
         * Handler.regexp( options )
-        
+
         处理路径（相对和绝对）。
 
         * Handler.getValueByKeyPath( key, options )
@@ -31,11 +31,11 @@
 
 */
 
-var Constant = require('./constant')
-var Util = require('./util')
-var Parser = require('./parser')
-var Random = require('./random/')
-var RE = require('./regexp')
+import Constant from './constant.js'
+import Util from './util.js'
+import {parse} from './parser.js'
+import Random from './random/index.js';
+import RE from './regexp/index.js';
 
 var Handler = {
     extend: Util.extend
@@ -49,7 +49,7 @@ var Handler = {
 
     Handle.gen(template, name, options)
     context
-        currentContext, templateCurrentContext, 
+        currentContext, templateCurrentContext,
         path, templatePath
         root, templateRoot
 */
@@ -73,7 +73,7 @@ Handler.gen = function(template, name, context) {
         }
         // console.log('path:', context.path.join('.'), template)
 
-    var rule = Parser.parse(name)
+    var rule = parse(name)
     var type = Util.type(template)
     var data
 
@@ -328,7 +328,7 @@ Handler.extend({
                 phed = Handler.placeholder(ph, options.context.currentContext, options.context.templateCurrentContext, options)
 
                 // 只有一个占位符，并且没有其他字符
-                if (placeholders.length === 1 && ph === result && typeof phed !== typeof result) { // 
+                if (placeholders.length === 1 && ph === result && typeof phed !== typeof result) { //
                     result = phed
                     break
 
@@ -499,7 +499,7 @@ Handler.extend({
             }
             // 引用的值已经计算好
             if (currentContext && (key in currentContext)) return currentContext[key]
-    
+
             // 尚未计算，递归引用数据模板中的属性
             if (templateCurrentContext &&
                 (typeof templateCurrentContext === 'object') &&
@@ -541,4 +541,4 @@ Handler.extend({
     }
 })
 
-module.exports = Handler
+export default Handler
