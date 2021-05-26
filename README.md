@@ -16,29 +16,12 @@ particularly while writing automated tests.
 
 The official site: <http://mockjs.com>
 
-## Features
+修改为支持Deno。
 
-- Generate simulated data according to the data template
-- Provide request/response mocking for ajax requests
-- ~~Generate simulated data according to HTML-based templates~~
+## TODO 
 
-This library is loosely inspired by Elijah Manor's post
-[Mocking Introduction](http://www.elijahmanor.com/2013/04/angry-birds-of-javascript-green-bird.html),
-[mennovanslooten/mockJSON](https://github.com/mennovanslooten/mockJSON),
-[appendto/jquery-mockjax](https://github.com/appendto/jquery-mockjax) and
-[victorquinn/chancejs](https://github.com/victorquinn/chancejs/).
-
-## Questions?
-
-If you have any questions, please feel free to ask through
-[New Issue](https://github.com/nuysoft/Mock/issues/new).
-
-## Reporting an Issue
-
-Make sure the problem you're addressing is reproducible. Use <http://jsbin.com/>
-or <http://jsfiddle.net/> to provide a test page. Indicate what browsers the
-issue can be reproduced in. What version of Mock.js is the issue reproducible
-in. Is it reproducible after updating to the latest version?
+- 为方便ts校验，去掉了xhr的mock拦截
+- canvas画图也需要修复
 
 ## License
 
