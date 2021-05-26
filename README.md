@@ -18,6 +18,12 @@ The official site: <http://mockjs.com>
 
 修改为支持Deno。
 
+## use
+
+```ts
+
+```
+
 ## TODO 
 
 - 为方便ts校验，去掉了xhr的mock拦截
