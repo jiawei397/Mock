@@ -2,56 +2,56 @@
     ## Helpers
 */
 
-import Util from '../util.ts';
+import Util from "../util.ts";
 
 const helper: any = {
-	// 把字符串的第一个字母转换为大写。
-	capitalize: function(word: string) {
-		return (word + '').charAt(0).toUpperCase() + (word + '').substr(1)
-	},
-	// 把字符串转换为大写。
-	upper: function(str: string) {
-		return (str + '').toUpperCase()
-	},
-	// 把字符串转换为小写。
-	lower: function(str: string) {
-		return (str + '').toLowerCase()
-	},
-	// 从数组中随机选取一个元素，并返回。
-	pick: function pick(arr: any, min: number, max: number) {
-		// pick( item1, item2 ... )
-		if (!Util.isArray(arr)) {
-			arr = [].slice.call(arguments)
-			min = 1
-			max = 1
-		} else {
-			// pick( [ item1, item2 ... ] )
-			if (min === undefined) min = 1
+  // 把字符串的第一个字母转换为大写。
+  capitalize: function (word: string) {
+    return (word + "").charAt(0).toUpperCase() + (word + "").substr(1);
+  },
+  // 把字符串转换为大写。
+  upper: function (str: string) {
+    return (str + "").toUpperCase();
+  },
+  // 把字符串转换为小写。
+  lower: function (str: string) {
+    return (str + "").toLowerCase();
+  },
+  // 从数组中随机选取一个元素，并返回。
+  pick: function pick(arr: any, min: number, max: number) {
+    // pick( item1, item2 ... )
+    if (!Util.isArray(arr)) {
+      arr = [].slice.call(arguments);
+      min = 1;
+      max = 1;
+    } else {
+      // pick( [ item1, item2 ... ] )
+      if (min === undefined) min = 1;
 
-			// pick( [ item1, item2 ... ], count )
-			if (max === undefined) max = min
-		}
+      // pick( [ item1, item2 ... ], count )
+      if (max === undefined) max = min;
+    }
 
-		if (min === 1 && max === 1) return arr[this.natural(0, arr.length - 1)]
+    if (min === 1 && max === 1) return arr[this.natural(0, arr.length - 1)];
 
-		// pick( [ item1, item2 ... ], min, max )
-		return this.shuffle(arr, min, max)
+    // pick( [ item1, item2 ... ], min, max )
+    return this.shuffle(arr, min, max);
 
-		// 通过参数个数判断方法签名，扩展性太差！#90
-		// switch (arguments.length) {
-		// 	case 1:
-		// 		// pick( [ item1, item2 ... ] )
-		// 		return arr[this.natural(0, arr.length - 1)]
-		// 	case 2:
-		// 		// pick( [ item1, item2 ... ], count )
-		// 		max = min
-		// 			/* falls through */
-		// 	case 3:
-		// 		// pick( [ item1, item2 ... ], min, max )
-		// 		return this.shuffle(arr, min, max)
-		// }
-	},
-	/*
+    // 通过参数个数判断方法签名，扩展性太差！#90
+    // switch (arguments.length) {
+    // 	case 1:
+    // 		// pick( [ item1, item2 ... ] )
+    // 		return arr[this.natural(0, arr.length - 1)]
+    // 	case 2:
+    // 		// pick( [ item1, item2 ... ], count )
+    // 		max = min
+    // 			/* falls through */
+    // 	case 3:
+    // 		// pick( [ item1, item2 ... ], min, max )
+    // 		return this.shuffle(arr, min, max)
+    // }
+  },
+  /*
 	    打乱数组中元素的顺序，并返回。
 	    Given an array, scramble the order and return it.
 
@@ -61,32 +61,32 @@ const helper: any = {
 	            return Math.random() - 0.5
 	        })
 	*/
-	shuffle: function shuffle(arr: any[], min: number, max: number) {
-		arr = arr || []
-		var old = arr.slice(0),
-			result = [],
-			index = 0,
-			length = old.length;
-		for (var i = 0; i < length; i++) {
-			index = this.natural(0, old.length - 1)
-			// @ts-ignore
-      result.push(old[index])
-			old.splice(index, 1)
-		}
-		switch (arguments.length) {
-			case 0:
-			case 1:
-				return result
-			case 2:
-				max = min
-					/* falls through */
-			case 3:
-				min = parseInt(min + "", 10)
-				max = parseInt(max + "", 10)
-				return result.slice(0, this.natural(min, max))
-		}
-	},
-	/*
+  shuffle: function shuffle(arr: any[], min: number, max: number) {
+    arr = arr || [];
+    var old = arr.slice(0),
+      result = [],
+      index = 0,
+      length = old.length;
+    for (var i = 0; i < length; i++) {
+      index = this.natural(0, old.length - 1);
+      // @ts-ignore
+      result.push(old[index]);
+      old.splice(index, 1);
+    }
+    switch (arguments.length) {
+      case 0:
+      case 1:
+        return result;
+      case 2:
+        max = min;
+        /* falls through */
+      case 3:
+        min = parseInt(min + "", 10);
+        max = parseInt(max + "", 10);
+        return result.slice(0, this.natural(min, max));
+    }
+  },
+  /*
 	    * Random.order(item, item)
 	    * Random.order([item, item ...])
 
@@ -96,27 +96,27 @@ const helper: any = {
 
 	    不支持单独调用！
 	*/
-	order: function order(array: any[]) {
+  order: function order(array: any[]) {
     // @ts-ignore
-		order.cache = order.cache || {}
+    order.cache = order.cache || {};
 
-		if (arguments.length > 1) array = [].slice.call(arguments, 0)
+    if (arguments.length > 1) array = [].slice.call(arguments, 0);
 
-		// options.context.path/templatePath
+    // options.context.path/templatePath
     // @ts-ignore
-		var options = order.options
-		var templatePath = options.context.templatePath.join('.')
+    var options = order.options;
+    var templatePath = options.context.templatePath.join(".");
 
-		var cache: any = (
+    var cache: any = (
       // @ts-ignore
-			order.cache[templatePath] = order.cache[templatePath] || {
-				index: 0,
-				array: array
-			}
-		)
+      order.cache[templatePath] = order.cache[templatePath] || {
+        index: 0,
+        array: array,
+      }
+    );
 
-		return cache.array[cache.index++ % cache.array.length]
-	}
-}
+    return cache.array[cache.index++ % cache.array.length];
+  },
+};
 
 export default helper;

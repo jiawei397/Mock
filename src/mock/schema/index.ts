@@ -1,2 +1,2 @@
-import Schema from './schema.ts';
+import Schema from "./schema.ts";
 export default Schema;

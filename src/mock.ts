@@ -1,11 +1,10 @@
 /* global require, module, window */
-import Handler from './mock/handler.ts'
-import Util from './mock/util.ts';
-import Random from './mock/random/index.ts'
-import RE from './mock/regexp/index.ts'
-import toJSONSchema from './mock/schema/index.ts'
-import valid from './mock/valid/index.ts'
-
+import Handler from "./mock/handler.ts";
+import Util from "./mock/util.ts";
+import Random from "./mock/random/index.ts";
+import RE from "./mock/regexp/index.ts";
+import toJSONSchema from "./mock/schema/index.ts";
+import valid from "./mock/valid/index.ts";
 
 /*!
     Mock - 模拟请求 & 模拟数据
@@ -21,9 +20,9 @@ const Mock: any = {
   valid,
   mock: mock,
   heredoc: Util.heredoc,
-  version: '2.0.0',
-  _mocked: {} as any
-}
+  version: "2.0.0",
+  _mocked: {} as any,
+};
 
 /*
     * Mock.mock( template )
@@ -42,24 +41,23 @@ function mock() {
   // Mock.mock(template)
   if (arguments.length === 1) {
     const template = arguments[0];
-    return Handler.gen(template)
+    return Handler.gen(template);
   }
   // Mock.mock(rurl, template)
   var rurl = arguments[0];
-  var rtype: string = '';
+  var rtype: string = "";
   var template;
   if (arguments.length === 2) {
     template = arguments[1];
   } else {
     template = arguments[2];
   }
-  Mock._mocked[rurl + (rtype || '')] = {
+  Mock._mocked[rurl + (rtype || "")] = {
     rurl: rurl,
     rtype: rtype,
-    template: template
-  }
-  return Mock
+    template: template,
+  };
+  return Mock;
 }
 
-
-export default Mock
+export default Mock;

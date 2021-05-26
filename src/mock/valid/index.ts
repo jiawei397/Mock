@@ -1,2 +1,2 @@
-import Valid from './valid.ts';
+import Valid from "./valid.ts";
 export default Valid;

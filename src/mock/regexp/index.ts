@@ -1,6 +1,6 @@
-import Parser from './parser.ts'
-import Handler from './handler.ts';
+import Parser from "./parser.ts";
+import Handler from "./handler.ts";
 export default {
-	Parser: Parser,
-	Handler: Handler
-}
+  Parser: Parser,
+  Handler: Handler,
+};
