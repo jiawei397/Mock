@@ -20,11 +20,21 @@ The official site: <http://mockjs.com>
 
 ## use
 
-```ts
+``` ts
+import mockjs from 'https://deno.land/x/deno_mock@v2.0.0/mod.ts';
 
+var tpl = {
+  "list|1-10": [{
+    "id|+1": 1,
+    "email": "@EMAIL",
+  }],
+};
+var data = Mock.mock(tpl);
+
+console.log(data);
 ```
 
-## TODO 
+## TODO
 
 - 为方便ts校验，去掉了xhr的mock拦截
 - canvas画图也需要修复
