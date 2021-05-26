@@ -61,9 +61,8 @@ Util.each = function each(obj: any, iterator: Function, context: any) {
 };
 
 Util.type = function type(obj: any) {
-  // @ts-ignore
   return (obj === null || obj === undefined)
-    ? String(obj)
+    ? String(obj) // @ts-ignore
     : Object.prototype.toString.call(obj).match(/\[object (\w+)\]/)[1]
       .toLowerCase();
 };
