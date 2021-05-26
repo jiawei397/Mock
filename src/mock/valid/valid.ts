@@ -20,11 +20,11 @@
     [JSON-Schama validator](http://json-schema-validator.herokuapp.com/)
     [Regexp Demo](http://demos.forbeslindesay.co.uk/regexp/)
 */
-import Constant from '../constant.js';
-import Util from '../util.js';
-import toJSONSchema from '../schema/index.js';
+import Constant from '../constant.ts';
+import Util from '../util.ts';
+import toJSONSchema from '../schema/index.ts';
 
-function valid(template, data) {
+function valid(template: string, data: any) {
     var schema = toJSONSchema(template)
     var result = Diff.diff(schema, data)
     for (var i = 0; i < result.length; i++) {
@@ -71,8 +71,8 @@ function valid(template, data) {
             无生成规则：检测全部的元素个数，继续递归
 */
 var Diff = {
-    diff: function diff(schema, data, name /* Internal Use Only */ ) {
-        var result = []
+    diff: function diff(schema: any, data: any, name?: string /* Internal Use Only */ ) {
+        var result: any[] = []
 
         // 先检测名称 name 和类型 type，如果匹配，才有必要继续检测
         if (
@@ -87,14 +87,14 @@ var Diff = {
         return result
     },
     /* jshint unused:false */
-    name: function(schema, data, name, result) {
+    name: function(schema: any, data: any, name: string | undefined, result: any) {
         var length = result.length
 
-        Assert.equal('name', schema.path, name + '', schema.name + '', result)
+        Assert.equal('name', schema.path, name + '', schema.name + '', result, '')
 
         return result.length === length
     },
-    type: function(schema, data, name, result) {
+    type: function(schema: any, data: any, name: string | undefined, result: any) {
         var length = result.length
 
         switch (schema.type) {
@@ -118,11 +118,11 @@ var Diff = {
                 return true
         }
 
-        Assert.equal('type', schema.path, Util.type(data), schema.type, result)
+        Assert.equal('type', schema.path, Util.type(data), schema.type, result, '')
 
         return result.length === length
     },
-    value: function(schema, data, name, result) {
+    value: function(schema: any, data: any, name: string | undefined, result: any) {
         var length = result.length
 
         var rule = schema.rule
@@ -133,14 +133,14 @@ var Diff = {
         if (!rule.parameters) {
             switch (templateType) {
                 case 'regexp':
-                    Assert.match('value', schema.path, data, schema.template, result)
+                    Assert.match('value', schema.path, data, schema.template, result, '')
                     return result.length === length
                 case 'string':
                     // 同样跳过含有『占位符』的属性值，因为『占位符』的返回值会通常会与模板不一致
                     if (schema.template.match(Constant.RE_PLACEHOLDER)) return result.length === length
                     break
             }
-            Assert.equal('value', schema.path, data, schema.template, result)
+            Assert.equal('value', schema.path, data, schema.template, result, '')
             return result.length === length
         }
 
@@ -149,14 +149,15 @@ var Diff = {
         switch (templateType) {
             case 'number':
                 var parts = (data + '').split('.')
-                parts[0] = +parts[0]
+              // @ts-ignore
+              parts[0] = +parts[0]
 
                 // 整数部分
                 // |min-max
                 if (rule.min !== undefined && rule.max !== undefined) {
-                    Assert.greaterThanOrEqualTo('value', schema.path, parts[0], Math.min(rule.min, rule.max), result)
+                    Assert.greaterThanOrEqualTo('value', schema.path, parts[0], Math.min(rule.min, rule.max), result, '')
                         // , 'numeric instance is lower than the required minimum (minimum: {expected}, found: {actual})')
-                    Assert.lessThanOrEqualTo('value', schema.path, parts[0], Math.max(rule.min, rule.max), result)
+                    Assert.lessThanOrEqualTo('value', schema.path, parts[0], Math.max(rule.min, rule.max), result, '')
                 }
                 // |count
                 if (rule.min !== undefined && rule.max === undefined) {
@@ -216,7 +217,7 @@ var Diff = {
 
         return result.length === length
     },
-    properties: function(schema, data, name, result) {
+    properties: function(schema: any, data: any, name: string | undefined, result: any) {
         var length = result.length
 
         var rule = schema.rule
@@ -248,7 +249,7 @@ var Diff = {
                 this.diff(
                     function() {
                         var property
-                        Util.each(schema.properties, function(item /*, index*/ ) {
+                        Util.each(schema.properties, function(item: any /*, index*/ ) {
                             if (item.name === keys[i]) property = item
                         })
                         return property || schema.properties[i]
@@ -261,7 +262,7 @@ var Diff = {
 
         return result.length === length
     },
-    items: function(schema, data, name, result) {
+    items: function(schema: any, data: any, name: string | undefined, result: any) {
         var length = result.length
 
         if (!schema.items) return
@@ -293,11 +294,12 @@ var Diff = {
         if (result.length !== length) return false
 
         for (var i = 0; i < data.length; i++) {
-            result.push.apply(
+
+          result.push.apply(
                 result,
                 this.diff(
                     schema.items[i % schema.items.length],
-                    data[i],
+                    data[i],  // @ts-ignore
                     i % schema.items.length
                 )
             )
@@ -320,7 +322,7 @@ var Diff = {
 
 */
 var Assert = {
-    message: function(item) {
+    message: function(item: any) {
         return (item.message ||
                 '[{utype}] Expect {path}\'{ltype} {action} {expected}, but is {actual}')
             .replace('{utype}', item.type.toUpperCase())
@@ -330,7 +332,7 @@ var Assert = {
             .replace('{expected}', item.expected)
             .replace('{actual}', item.actual)
     },
-    equal: function(type, path, actual, expected, result, message) {
+    equal: function(type: string, path: string, actual: any, expected: any, result: any[], message?: string) {
         if (actual === expected) return true
         switch (type) {
             case 'type':
@@ -352,7 +354,7 @@ var Assert = {
         return false
     },
     // actual matches expected
-    match: function(type, path, actual, expected, result, message) {
+    match: function(type: string, path: string, actual: any, expected: any, result: any[], message?: string) {
         if (expected.test(actual)) return true
 
         var item = {
@@ -367,7 +369,7 @@ var Assert = {
         result.push(item)
         return false
     },
-    notEqual: function(type, path, actual, expected, result, message) {
+    notEqual: function(type: string, path: string, actual: any, expected: any, result: any[], message?: string) {
         if (actual !== expected) return true
         var item = {
             path: path,
@@ -381,7 +383,7 @@ var Assert = {
         result.push(item)
         return false
     },
-    greaterThan: function(type, path, actual, expected, result, message) {
+    greaterThan: function(type: string, path: string, actual: any, expected: any, result: any[], message?: string) {
         if (actual > expected) return true
         var item = {
             path: path,
@@ -395,7 +397,7 @@ var Assert = {
         result.push(item)
         return false
     },
-    lessThan: function(type, path, actual, expected, result, message) {
+    lessThan: function(type: string, path: string, actual: any, expected: any, result: any[], message?: string) {
         if (actual < expected) return true
         var item = {
             path: path,
@@ -409,7 +411,7 @@ var Assert = {
         result.push(item)
         return false
     },
-    greaterThanOrEqualTo: function(type, path, actual, expected, result, message) {
+    greaterThanOrEqualTo: function(type: string, path: string, actual: any, expected: any, result: any[], message?: string) {
         if (actual >= expected) return true
         var item = {
             path: path,
@@ -423,7 +425,7 @@ var Assert = {
         result.push(item)
         return false
     },
-    lessThanOrEqualTo: function(type, path, actual, expected, result, message) {
+    lessThanOrEqualTo: function(type: string, path: string, actual: any, expected: any, result: any[], message?: string) {
         if (actual <= expected) return true
         var item = {
             path: path,

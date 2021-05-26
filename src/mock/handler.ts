@@ -31,15 +31,12 @@
 
 */
 
-import Constant from './constant.js'
-import Util from './util.js'
-import {parse} from './parser.js'
-import Random from './random/index.js';
-import RE from './regexp/index.js';
+import Constant from './constant.ts'
+import Util from './util.ts'
+import {parse} from './parser.ts'
+import Random from './random/index.ts';
+import RE from './regexp/index.ts';
 
-var Handler = {
-    extend: Util.extend
-}
 
 /*
     template        属性值（即数据模板）
@@ -53,7 +50,7 @@ var Handler = {
         path, templatePath
         root, templateRoot
 */
-Handler.gen = function(template, name, context) {
+const gen = function(template: any, name?: any, context?: any) {
     /* jshint -W041 */
     name = name == undefined ? '' : (name + '')
 
@@ -101,9 +98,14 @@ Handler.gen = function(template, name, context) {
     return template
 }
 
+var Handler: any = {
+  gen,
+  extend: Util.extend
+}
+
 Handler.extend({
-    array: function(options) {
-        var result = [],
+    array: function(options: any) {
+        var result: any = [],
             i, ii;
 
         // 'name|1': []
@@ -116,8 +118,9 @@ Handler.extend({
             for (i = 0; i < options.template.length; i++) {
                 options.context.path.push(i)
                 options.context.templatePath.push(i)
-                result.push(
-                    Handler.gen(options.template[i], i, {
+              result.push(
+                // @ts-ignore
+                    gen(options.template[i], i, {
                         path: options.context.path,
                         templatePath: options.context.templatePath,
                         currentContext: result,
@@ -135,7 +138,8 @@ Handler.extend({
                 // fix #17
                 options.context.path.push(options.name)
                 options.context.templatePath.push(options.name)
-                result = Random.pick(
+                // @ts-ignore
+              result = Random.pick(
                     Handler.gen(options.template, undefined, {
                         path: options.context.path,
                         templatePath: options.context.templatePath,
@@ -177,7 +181,8 @@ Handler.extend({
                         for (ii = 0; ii < options.template.length; ii++) {
                             options.context.path.push(result.length)
                             options.context.templatePath.push(ii)
-                            result.push(
+
+                          result.push(   // @ts-ignore
                                 Handler.gen(options.template[ii], result.length, {
                                     path: options.context.path,
                                     templatePath: options.context.templatePath,
@@ -196,15 +201,16 @@ Handler.extend({
         }
         return result
     },
-    object: function(options) {
-        var result = {},
-            keys, fnKeys, key, parsedKey, inc, i;
+    object: function(options: any) {
+        var result: any = {},
+            keys: any[], fnKeys: any[], key: string, parsedKey: string, inc, i;
 
         // 'obj|min-max': {}
         /* jshint -W041 */
         if (options.rule.min != undefined) {
             keys = Util.keys(options.template)
-            keys = Random.shuffle(keys)
+            // @ts-ignore
+          keys = Random.shuffle(keys)
             keys = keys.slice(0, options.rule.count)
             for (i = 0; i < keys.length; i++) {
                 key = keys[i]
@@ -268,7 +274,7 @@ Handler.extend({
         }
         return result
     },
-    number: function(options) {
+    number: function(options: any) {
         var result, parts;
         if (options.rule.decimal) { // float
             options.template += ''
@@ -280,26 +286,29 @@ Handler.extend({
             parts[0] = options.rule.range ? options.rule.count : parts[0]
             parts[1] = (parts[1] || '').slice(0, options.rule.dcount)
             while (parts[1].length < options.rule.dcount) {
-                parts[1] += (
+              parts[1] += (
                     // 最后一位不能为 0：如果最后一位为 0，会被 JS 引擎忽略掉。
+                    // @ts-ignore
                     (parts[1].length < options.rule.dcount - 1) ? Random.character('number') : Random.character('123456789')
                 )
             }
-            result = parseFloat(parts.join('.'), 10)
+            // @ts-ignore
+          result = parseFloat(parts.join('.'), 10)
         } else { // integer
             // 'grade1|1-100': 1,
             result = options.rule.range && !options.rule.parameters[2] ? options.rule.count : options.template
         }
         return result
     },
-    boolean: function(options) {
+    boolean: function(options: any) {
         var result;
         // 'prop|multiple': false, 当前值是相反值的概率倍数
         // 'prop|probability-probability': false, 当前值与相反值的概率
-        result = options.rule.parameters ? Random.bool(options.rule.min, options.rule.max, options.template) : options.template
+        // @ts-ignore
+      result = options.rule.parameters ? Random.bool(options.rule.min, options.rule.max, options.template) : options.template
         return result
     },
-    string: function(options) {
+    string: function(options: any) {
         var result = '',
             i, placeholders, ph, phed;
         if (options.template.length) {
@@ -325,7 +334,8 @@ Handler.extend({
                     continue
                 }
 
-                phed = Handler.placeholder(ph, options.context.currentContext, options.context.templateCurrentContext, options)
+                // @ts-ignore
+              phed = Handler.placeholder(ph, options.context.currentContext, options.context.templateCurrentContext, options)
 
                 // 只有一个占位符，并且没有其他字符
                 if (placeholders.length === 1 && ph === result && typeof phed !== typeof result) { //
@@ -333,7 +343,8 @@ Handler.extend({
                     break
 
                     if (Util.isNumeric(phed)) {
-                        result = parseFloat(phed, 10)
+                        // @ts-ignore
+                      result = parseFloat(phed, 10)
                         break
                     }
                     if (/^(true|false)$/.test(phed)) {
@@ -349,15 +360,16 @@ Handler.extend({
         } else {
             // 'ASCII|1-10': '',
             // 'ASCII': '',
-            result = options.rule.range ? Random.string(options.rule.count) : options.template
+            // @ts-ignore
+          result = options.rule.range ? Random.string(options.rule.count) : options.template
         }
         return result
     },
-    'function': function(options) {
+    'function': function(options: any) {
         // ( context, options )
         return options.template.call(options.context.currentContext, options)
     },
-    'regexp': function(options) {
+    'regexp': function(options: any) {
         var source = ''
 
         // 'name': /regexp/,
@@ -371,7 +383,8 @@ Handler.extend({
             source += options.template.source
         }
 
-        return RE.Handler.gen(
+        // @ts-ignore
+      return RE.Handler.gen(
             RE.Parser.parse(
                 source
             )
@@ -381,20 +394,22 @@ Handler.extend({
 
 Handler.extend({
     _all: function() {
-        var re = {};
+        var re: any = {};
         for (var key in Random) re[key.toLowerCase()] = key
         return re
     },
     // 处理占位符，转换为最终值
-    placeholder: function(placeholder, obj, templateContext, options) {
+    placeholder: function(placeholder: string, obj: any, templateContext: string, options: any) {
         // console.log(options.context.path)
         // 1 key, 2 params
         Constant.RE_PLACEHOLDER.exec('')
-        var parts = Constant.RE_PLACEHOLDER.exec(placeholder),
-            key = parts && parts[1],
-            lkey = key && key.toLowerCase(),
-            okey = this._all()[lkey],
-            params = parts && parts[2] || ''
+
+      var parts = Constant.RE_PLACEHOLDER.exec(placeholder);
+      var key = parts && parts[1];
+      var lkey = key && key.toLowerCase();
+      // @ts-ignore
+      var okey = this._all()[lkey];
+      var params = parts && parts[2] || '';
         var pathParts = this.splitPathToArray(key)
 
         // 解析占位符的参数
@@ -412,52 +427,62 @@ Handler.extend({
             // console.error(error)
             // if (error instanceof ReferenceError) params = parts[2].split(/,\s*/);
             // else throw error
-            params = parts[2].split(/,\s*/)
+            // @ts-ignore
+          params = parts[2].split(/,\s*/)
         }
 
         // 占位符优先引用数据模板中的属性
-        if (obj && (key in obj)) return obj[key]
+        // @ts-ignore
+      if (obj && (key in obj)) return obj[key]
 
         // @index @key
         // if (Constant.RE_INDEX.test(key)) return +options.name
         // if (Constant.RE_KEY.test(key)) return options.name
 
         // 绝对路径 or 相对路径
-        if (
+      if (
+        // @ts-ignore
             key.charAt(0) === '/' ||
             pathParts.length > 1
         ) return this.getValueByKeyPath(key, options)
 
         // 递归引用数据模板中的属性
-        if (templateContext &&
-            (typeof templateContext === 'object') &&
-            (key in templateContext) &&
+
+      if (templateContext &&
+            (typeof templateContext === 'object') && // @ts-ignore
+            (key in templateContext) && // @ts-ignore
             (placeholder !== templateContext[key]) // fix #15 避免自己依赖自己
         ) {
             // 先计算被引用的属性值
+        // @ts-ignore
             templateContext[key] = Handler.gen(templateContext[key], key, {
                 currentContext: obj,
                 templateCurrentContext: templateContext
             })
-            return templateContext[key]
+            // @ts-ignore
+        return templateContext[key]
         }
 
         // 如果未找到，则原样返回
-        if (!(key in Random) && !(lkey in Random) && !(okey in Random)) return placeholder
+        // @ts-ignore
+      if (!(key in Random) && !(lkey in Random) && !(okey in Random)) return placeholder
 
         // 递归解析参数中的占位符
         for (var i = 0; i < params.length; i++) {
             Constant.RE_PLACEHOLDER.exec('')
             if (Constant.RE_PLACEHOLDER.test(params[i])) {
-                params[i] = Handler.placeholder(params[i], obj, templateContext, options)
+                // @ts-ignore
+              params[i] = Handler.placeholder(params[i], obj, templateContext, options)
             }
         }
 
-        var handle = Random[key] || Random[lkey] || Random[okey]
+        // @ts-ignore
+      var handle = Random[key] || Random[lkey] || Random[okey]
         switch (Util.type(handle)) {
             case 'array':
                 // 自动从数组中取一个，例如 @areas
-                return Random.pick(handle)
+              // @ts-ignore
+              return Random.pick(handle)
             case 'function':
                 // 执行占位符方法（大多数情况）
                 handle.options = options
@@ -467,14 +492,15 @@ Handler.extend({
                 return re
         }
     },
-    getValueByKeyPath: function(key, options) {
+    getValueByKeyPath: function(key: string, options: any) {
         var originalKey = key
         var keyPathParts = this.splitPathToArray(key)
         var absolutePathParts = []
 
         // 绝对路径
         if (key.charAt(0) === '/') {
-            absolutePathParts = [options.context.path[0]].concat(
+            // @ts-ignore
+          absolutePathParts = [options.context.path[0]].concat(
                 this.normalizePath(keyPathParts)
             )
         } else {
@@ -517,8 +543,8 @@ Handler.extend({
 
         return '@' + keyPathParts.join('/')
     },
-    // https://github.com/kissyteam/kissy/blob/master/src/path/src/path.js
-    normalizePath: function(pathParts) {
+    // https://github.com/kissyteam/kissy/blob/master/src/path/src/path.ts
+    normalizePath: function(pathParts: string[]) {
         var newPathParts = []
         for (var i = 0; i < pathParts.length; i++) {
             switch (pathParts[i]) {
@@ -528,12 +554,13 @@ Handler.extend({
                 case '.':
                     break
                 default:
-                    newPathParts.push(pathParts[i])
+                  // @ts-ignore
+                  newPathParts.push(pathParts[i])
             }
         }
         return newPathParts
     },
-    splitPathToArray: function(path) {
+    splitPathToArray: function(path: string) {
         var parts = path.split(/\/+/);
         if (!parts[parts.length - 1]) parts = parts.slice(0, -1)
         if (!parts[0]) parts = parts.slice(1)

@@ -4024,8 +4024,8 @@ var DICT = {
 }
 
 // id pid/parentId name children
-function tree(list) {
-    var mapped = {}
+function tree(list: any[]) {
+    var mapped: any = {}
     for (var i = 0, item; i < list.length; i++) {
         item = list[i]
         if (!item || !item.id) continue
@@ -4039,7 +4039,8 @@ function tree(list) {
 
         item = list[ii]
         if (item.pid == undefined && item.parentId == undefined) {
-            result.push(item)
+            // @ts-ignore
+          result.push(item)
             continue
         }
         var parent = mapped[item.pid] || mapped[item.parentId]
@@ -4056,9 +4057,10 @@ var DICT_FIXED = function() {
         var pid = id.slice(2, 6) === '0000' ? undefined :
             id.slice(4, 6) == '00' ? (id.slice(0, 2) + '0000') :
             id.slice(0, 4) + '00'
-        fixed.push({
-            id: id,
-            pid: pid,
+
+      fixed.push({ // @ts-ignore
+            id: id, // @ts-ignore
+            pid: pid, // @ts-ignore
             name: DICT[id]
         })
     }

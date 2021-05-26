@@ -2,10 +2,10 @@
     ## Address
 */
 
-import DICT from './address_dict.js'
+import DICT from './address_dict.ts'
 var REGION = ['东北', '华北', '华东', '华中', '华南', '西南', '西北']
 
-export default {
+const address: any = {
     // 随机生成一个大区。
     region: function() {
         return this.pick(REGION)
@@ -15,13 +15,13 @@ export default {
         return this.pick(DICT).name
     },
     // 随机生成一个（中国）市。
-    city: function(prefix) {
+    city: function(prefix: string) {
         var province = this.pick(DICT)
         var city = this.pick(province.children)
         return prefix ? [province.name, city.name].join(' ') : city.name
     },
     // 随机生成一个（中国）县。
-    county: function(prefix) {
+    county: function(prefix: string) {
         var province = this.pick(DICT)
         var city = this.pick(province.children)
         var county = this.pick(city.children) || {
@@ -30,7 +30,7 @@ export default {
         return prefix ? [province.name, city.name, county.name].join(' ') : county.name
     },
     // 随机生成一个邮政编码（六位数字）。
-    zip: function(len) {
+    zip: function(len: number) {
         var zip = ''
         for (var i = 0; i < (len || 6); i++) zip += this.natural(0, 9)
         return zip
@@ -45,3 +45,5 @@ export default {
     // states: function() {},
     // state: function() {},
 }
+
+export default address;

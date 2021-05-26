@@ -72,12 +72,12 @@
         return color.toUpperCase()
 */
 
-import Convert from './color_convert.js'
-import DICT from './color_dict.js'
+import Convert from './color_convert.ts'
+import DICT, {DictKeys} from './color_dict.ts'
 
-export default {
+const colors: any =  {
     // 随机生成一个有吸引力的颜色，格式为 '#RRGGBB'。
-    color: function(name) {
+    color: function(name: DictKeys) {
         if (name || DICT[name]) return DICT[name].nicer
         return this.hex()
     },
@@ -85,7 +85,7 @@ export default {
     hex: function() {
         var hsv = this._goldenRatioColor()
         var rgb = Convert.hsv2rgb(hsv)
-        var hex = Convert.rgb2hex(rgb[0], rgb[1], rgb[2])
+        var hex = Convert.rgb2hex(rgb![0], rgb![1], rgb![2])
         return hex
     },
     // rgb(128,255,255)
@@ -93,18 +93,18 @@ export default {
         var hsv = this._goldenRatioColor()
         var rgb = Convert.hsv2rgb(hsv)
         return 'rgb(' +
-            parseInt(rgb[0], 10) + ', ' +
-            parseInt(rgb[1], 10) + ', ' +
-            parseInt(rgb[2], 10) + ')'
+            parseInt(String(rgb![0]), 10) + ', ' +
+            parseInt(String(rgb![1]), 10) + ', ' +
+            parseInt(String(rgb![2]), 10) + ')'
     },
     // rgba(128,255,255,0.3)
     rgba: function() {
         var hsv = this._goldenRatioColor()
         var rgb = Convert.hsv2rgb(hsv)
         return 'rgba(' +
-            parseInt(rgb[0], 10) + ', ' +
-            parseInt(rgb[1], 10) + ', ' +
-            parseInt(rgb[2], 10) + ', ' +
+            parseInt(String(rgb![0]), 10) + ', ' +
+            parseInt(String(rgb![1]), 10) + ', ' +
+            parseInt(String(rgb![2]), 10) + ', ' +
             Math.random().toFixed(2) + ')'
     },
     // hsl(300,80%,90%)
@@ -112,14 +112,14 @@ export default {
         var hsv = this._goldenRatioColor()
         var hsl = Convert.hsv2hsl(hsv)
         return 'hsl(' +
-            parseInt(hsl[0], 10) + ', ' +
-            parseInt(hsl[1], 10) + ', ' +
-            parseInt(hsl[2], 10) + ')'
+            parseInt(String(hsl[0]), 10) + ', ' +
+            parseInt(String(hsl[1]), 10) + ', ' +
+            parseInt(String(hsl[2]), 10) + ')'
     },
     // http://martin.ankerl.com/2009/12/09/how-to-create-random-colors-programmatically/
-    // https://github.com/devongovett/color-generator/blob/master/index.js
+    // https://github.com/devongovett/color-generator/blob/master/index.ts
     // 随机生成一个有吸引力的颜色。
-    _goldenRatioColor: function(saturation, value) {
+    _goldenRatioColor: function(saturation: number, value: number) {
         this._goldenRatio = 0.618033988749895
         this._hue = this._hue || Math.random()
         this._hue += this._goldenRatio
@@ -135,3 +135,5 @@ export default {
         ]
     }
 }
+
+export default colors;

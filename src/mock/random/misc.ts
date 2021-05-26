@@ -1,8 +1,8 @@
 /*
     ## Miscellaneous
 */
-import DICT from './address_dict.js';
-export default {
+import DICT from './address_dict.ts';
+const misc: any =  {
 	// Dice
 	d4: function() {
 		return this.natural(1, 4)
@@ -46,7 +46,7 @@ export default {
 	                "a" / "b" / "c" / "d" / "e" / "f" /
 	                "A" / "B" / "C" / "D" / "E" / "F"
 
-	    https://github.com/victorquinn/chancejs/blob/develop/chance.js#L1349
+	    https://github.com/victorquinn/chancejs/blob/develop/chance.ts#L1349
 	*/
 	guid: function() {
 		var pool = "abcdefABCDEF1234567890",
@@ -82,7 +82,8 @@ export default {
 			this.string('number', 3)
 
 		for (var i = 0; i < id.length; i++) {
-			sum += id[i] * rank[i];
+			// @ts-ignore
+      sum += id[i] * rank[i];
 		}
 		id += last[sum % 11];
 
@@ -95,11 +96,13 @@ export default {
 	*/
 	increment: function() {
 		var key = 0
-		return function(step) {
+		return function(step: number) {
 			return key += (+step || 1) // step?
 		}
 	}(),
-	inc: function(step) {
+	inc: function(step: number) {
 		return this.increment(step)
 	}
 }
+
+export default misc;

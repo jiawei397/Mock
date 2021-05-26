@@ -1,7 +1,7 @@
 // https://github.com/nuysoft/regexp
 // forked from https://github.com/ForbesLindesay/regexp
 
-function parse(n) {
+function parse(n: any) {
     if ("string" != typeof n) {
         var l = new TypeError("The regexp to parse must be represented as a string.");
         throw l;
@@ -9,78 +9,165 @@ function parse(n) {
     return index = 1, cgs = {}, parser.parse(n);
 }
 
-function Token(n) {
-    this.type = n, this.offset = Token.offset(), this.text = Token.text();
+class Token {
+  protected offset: number | string;
+  private type: string;
+  protected text: string;
+  constructor(n: string) {
+    this.type = n;
+    this.offset = Token.offset();
+    this.text = Token.text();
+  }
+  static offset() : any{
+
+  }
+
+  static text() : any{
+
+  }
 }
 
-function Alternate(n, l) {
-    Token.call(this, "alternate"), this.left = n, this.right = l;
+class Alternate extends Token{
+  private left: string;
+  private right: string;
+  constructor(left: string, right: string) {
+    super("alternate");
+    this.left = left;
+    this.right = right;
+  }
 }
 
-function Match(n) {
-    Token.call(this, "match"), this.body = n.filter(Boolean);
+class Match extends Token{
+  public body: any;
+  constructor(n: any[]) {
+    super("match");
+    this.body = n.filter(Boolean);
+  }
 }
 
-function Group(n, l) {
-    Token.call(this, n), this.body = l;
+class Group extends Token{
+  public body: any;
+  constructor(n: string, l: any) {
+    super(n);
+    this.body = l;
+  }
 }
 
-function CaptureGroup(n) {
-    Group.call(this, "capture-group"), this.index = cgs[this.offset] || (cgs[this.offset] = index++),
+class CaptureGroup extends Group{
+  private index: any;
+  constructor(n: any) {
+    super("capture-group", n);
+    this.index = cgs[this.offset] || (cgs[this.offset] = index++);
+  }
+}
+
+class Quantified extends Token {
+  private body: any;
+  private quantifier: any;
+
+  constructor(body: any, quantifier: any) {
+    super("quantified");
+    this.body = body;
+    this.quantifier = quantifier;
+  }
+}
+
+class Quantifier extends Token {
+  private min: number;
+  private max: number;
+  private greedy: boolean;
+
+  constructor(n: number, l: number) {
+    super("quantifier");
+    this.min = n;
+    this.max = l;
+    this.greedy = !0
+  }
+}
+
+class CharSet extends Token {
+  private body: any;
+  private invert: any;
+  constructor(n: any, l: any) {
+    super("charset");
+    this.invert = n;
+    this.body = l;
+  }
+}
+
+class CharacterRange extends Token {
+  private start: number;
+  private end: number;
+  constructor(n: number, l: number) {
+    super("range");
+    this.start = n;
+    this.end = l;
+  }
+}
+
+class Literal extends Token {
+  private body: any;
+  private escaped: boolean;
+  constructor(n: any) {
+    super("literal");
     this.body = n;
+    this.escaped = this.body != this.text;
+  }
 }
 
-function Quantified(n, l) {
-    Token.call(this, "quantified"), this.body = n, this.quantifier = l;
+class Unicode extends Token {
+  private code: string;
+  constructor(n: string) {
+    super("unicode");
+    this.code = n.toUpperCase();
+  }
 }
 
-function Quantifier(n, l) {
-    Token.call(this, "quantifier"), this.min = n, this.max = l, this.greedy = !0;
+class Hex extends Token {
+  private code: string;
+  constructor(n: string) {
+    super("hex");
+    this.code = n.toUpperCase();
+  }
 }
 
-function CharSet(n, l) {
-    Token.call(this, "charset"), this.invert = n, this.body = l;
+class Octal extends Token {
+  private code: string;
+  constructor(n: string) {
+    super("octal");
+    this.code = n.toUpperCase();
+  }
 }
 
-function CharacterRange(n, l) {
-    Token.call(this, "range"), this.start = n, this.end = l;
+class BackReference extends Token {
+  private code: string;
+  constructor(n: string) {
+    super("back-reference");
+    this.code = n.toUpperCase();
+  }
 }
 
-function Literal(n) {
-    Token.call(this, "literal"), this.body = n, this.escaped = this.body != this.text;
-}
-
-function Unicode(n) {
-    Token.call(this, "unicode"), this.code = n.toUpperCase();
-}
-
-function Hex(n) {
-    Token.call(this, "hex"), this.code = n.toUpperCase();
-}
-
-function Octal(n) {
-    Token.call(this, "octal"), this.code = n.toUpperCase();
-}
-
-function BackReference(n) {
-    Token.call(this, "back-reference"), this.code = n.toUpperCase();
-}
-
-function ControlCharacter(n) {
-    Token.call(this, "control-character"), this.code = n.toUpperCase();
+class ControlCharacter extends Token {
+  private code: string;
+  constructor(n: string) {
+    super("control-character");
+    this.code = n.toUpperCase();
+  }
 }
 
 var parser = function() {
-    function n(n, l) {
-        function u() {
-            this.constructor = n;
-        }
-        u.prototype = l.prototype, n.prototype = new u();
+    function n(n: any, l: any) {
+        const U = function() {
+            // @ts-ignore
+          this.constructor = n;
+        } as any;
+        U.prototype = l.prototype;
+        n.prototype = new U();
     }
-    function l(n, l, u, t, r) {
-        function e(n, l) {
-            function u(n) {
-                function l(n) {
+    function l(n: any, l: any, u: any, t: any, r: any) {
+        function e(n: string[], l: any) {
+            function u(n: string) {
+                function l(n: string) {
                     return n.charCodeAt(0).toString(16).toUpperCase();
                 }
                 return n.replace(/\\/g, "\\\\").replace(/"/g, '\\"').replace(/\x08/g, "\\b").replace(/\t/g, "\\t").replace(/\n/g, "\\n").replace(/\f/g, "\\f").replace(/\r/g, "\\r").replace(/[\x00-\x07\x0B\x0E\x0F]/g, function(n) {
@@ -108,18 +195,18 @@ var parser = function() {
             }
             return r = l ? '"' + u(l) + '"' : "end of input", "Expected " + t + " but " + r + " found.";
         }
-        this.expected = n, this.found = l, this.offset = u, this.line = t, this.column = r,
-        this.name = "SyntaxError", this.message = e(n, l);
+      // @ts-ignore
+        this.expected = n, this.found = l, this.offset = u, this.line = t, this.column = r, this.name = "SyntaxError", this.message = e(n, l);
     }
-    function u(n) {
+    function u(n: any) {
         function u() {
             return n.substring(Lt, qt);
         }
         function t() {
             return Lt;
         }
-        function r(l) {
-            function u(l, u, t) {
+        function r(l: any) {
+            function u(l: any, u: any, t: any) {
                 var r, e;
                 for (r = u; t > r; r++) e = n.charAt(r), "\n" === e ? (l.seenCR || l.line++, l.column = 1,
                 l.seenCR = !1) : "\r" === e || "\u2028" === e || "\u2029" === e ? (l.line++, l.column = 1,
@@ -131,15 +218,19 @@ var parser = function() {
                 seenCR: !1
             }), u(Dt, Mt, l), Mt = l), Dt;
         }
-        function e(n) {
+        function e(n: any) {
             Ht > qt || (qt > Ht && (Ht = qt, Ot = []), Ot.push(n));
         }
-        function o(n) {
+        function o(n: any[]) {
             var l = 0;
             for (n.sort(); l < n.length; ) n[l - 1] === n[l] ? n.splice(l, 1) : l++;
         }
-        function c() {
-            var l, u, t, r, o;
+        function c(): void {
+          var l: any;
+          var u: any;
+          var t: any;
+          var r: any;
+          var o: any;
             return l = qt, u = i(), null !== u ? (t = qt, 124 === n.charCodeAt(qt) ? (r = fl,
             qt++) : (r = null, 0 === Wt && e(sl)), null !== r ? (o = c(), null !== o ? (r = [ r, o ],
             t = r) : (qt = t, t = il)) : (qt = t, t = il), null === t && (t = al), null !== t ? (Lt = l,
@@ -463,108 +554,257 @@ var parser = function() {
             null !== t ? (Lt = l, u = bu(t), null === u ? (qt = l, l = u) : l = u) : (qt = l,
             l = il)) : (qt = l, l = il), l;
         }
-        var rl, el = arguments.length > 1 ? arguments[1] : {}, ol = {
-            regexp: c
-        }, cl = c, il = null, al = "", fl = "|", sl = '"|"', hl = function(n, l) {
-            return l ? new Alternate(n, l[1]) : n;
-        }, dl = function(n, l, u) {
-            return new Match([ n ].concat(l).concat([ u ]));
-        }, pl = "^", vl = '"^"', wl = function() {
-            return new Token("start");
-        }, Al = "$", Cl = '"$"', gl = function() {
-            return new Token("end");
-        }, bl = function(n, l) {
-            return new Quantified(n, l);
-        }, kl = "Quantifier", Tl = function(n, l) {
-            return l && (n.greedy = !1), n;
-        }, xl = "{", yl = '"{"', ml = ",", Rl = '","', Fl = "}", Ql = '"}"', Sl = function(n, l) {
-            return new Quantifier(n, l);
-        }, Ul = ",}", El = '",}"', Gl = function(n) {
-            return new Quantifier(n, 1/0);
-        }, Bl = function(n) {
-            return new Quantifier(n, n);
-        }, jl = "+", $l = '"+"', ql = function() {
-            return new Quantifier(1, 1/0);
-        }, Ll = "*", Ml = '"*"', Dl = function() {
-            return new Quantifier(0, 1/0);
-        }, Hl = "?", Ol = '"?"', Wl = function() {
-            return new Quantifier(0, 1);
-        }, zl = /^[0-9]/, Il = "[0-9]", Jl = function(n) {
-            return +n.join("");
-        }, Kl = "(", Nl = '"("', Pl = ")", Vl = '")"', Xl = function(n) {
-            return n;
-        }, Yl = function(n) {
-            return new CaptureGroup(n);
-        }, Zl = "?:", _l = '"?:"', nu = function(n) {
-            return new Group("non-capture-group", n);
-        }, lu = "?=", uu = '"?="', tu = function(n) {
-            return new Group("positive-lookahead", n);
-        }, ru = "?!", eu = '"?!"', ou = function(n) {
-            return new Group("negative-lookahead", n);
-        }, cu = "CharacterSet", iu = "[", au = '"["', fu = "]", su = '"]"', hu = function(n, l) {
-            return new CharSet(!!n, l);
-        }, du = "CharacterRange", pu = "-", vu = '"-"', wu = function(n, l) {
-            return new CharacterRange(n, l);
-        }, Au = "Character", Cu = /^[^\\\]]/, gu = "[^\\\\\\]]", bu = function(n) {
-            return new Literal(n);
-        }, ku = ".", Tu = '"."', xu = function() {
-            return new Token("any-character");
-        }, yu = "Literal", mu = /^[^|\\\/.[()?+*$\^]/, Ru = "[^|\\\\\\/.[()?+*$\\^]", Fu = "\\b", Qu = '"\\\\b"', Su = function() {
-            return new Token("backspace");
-        }, Uu = function() {
-            return new Token("word-boundary");
-        }, Eu = "\\B", Gu = '"\\\\B"', Bu = function() {
-            return new Token("non-word-boundary");
-        }, ju = "\\d", $u = '"\\\\d"', qu = function() {
-            return new Token("digit");
-        }, Lu = "\\D", Mu = '"\\\\D"', Du = function() {
-            return new Token("non-digit");
-        }, Hu = "\\f", Ou = '"\\\\f"', Wu = function() {
-            return new Token("form-feed");
-        }, zu = "\\n", Iu = '"\\\\n"', Ju = function() {
-            return new Token("line-feed");
-        }, Ku = "\\r", Nu = '"\\\\r"', Pu = function() {
-            return new Token("carriage-return");
-        }, Vu = "\\s", Xu = '"\\\\s"', Yu = function() {
-            return new Token("white-space");
-        }, Zu = "\\S", _u = '"\\\\S"', nt = function() {
-            return new Token("non-white-space");
-        }, lt = "\\t", ut = '"\\\\t"', tt = function() {
-            return new Token("tab");
-        }, rt = "\\v", et = '"\\\\v"', ot = function() {
-            return new Token("vertical-tab");
-        }, ct = "\\w", it = '"\\\\w"', at = function() {
-            return new Token("word");
-        }, ft = "\\W", st = '"\\\\W"', ht = function() {
-            return new Token("non-word");
-        }, dt = "\\c", pt = '"\\\\c"', vt = "any character", wt = function(n) {
-            return new ControlCharacter(n);
-        }, At = "\\", Ct = '"\\\\"', gt = /^[1-9]/, bt = "[1-9]", kt = function(n) {
-            return new BackReference(n);
-        }, Tt = "\\0", xt = '"\\\\0"', yt = /^[0-7]/, mt = "[0-7]", Rt = function(n) {
-            return new Octal(n.join(""));
-        }, Ft = "\\x", Qt = '"\\\\x"', St = /^[0-9a-fA-F]/, Ut = "[0-9a-fA-F]", Et = function(n) {
-            return new Hex(n.join(""));
-        }, Gt = "\\u", Bt = '"\\\\u"', jt = function(n) {
-            return new Unicode(n.join(""));
-        }, $t = function() {
-            return new Token("null-character");
-        }, qt = 0, Lt = 0, Mt = 0, Dt = {
-            line: 1,
-            column: 1,
-            seenCR: !1
-        }, Ht = 0, Ot = [], Wt = 0;
+
+      var rl: any;
+      var el: any = arguments.length > 1 ? arguments[1] : {};
+      var ol: any = {
+        regexp: c
+      };
+      var cl = c;
+      var il: any = null;
+      var al = "";
+      var fl = "|";
+      var sl = '"|"';
+      var hl = function (n: any, l: any) {
+        return l ? new Alternate(n, l[1]) : n;
+      };
+      var dl = function (n: any, l: any, u: any) {
+        return new Match([n].concat(l).concat([u]));
+      };
+      var pl = "^";
+      var vl = '"^"';
+      var wl = function () {
+        return new Token("start");
+      };
+      var Al = "$";
+      var Cl = '"$"';
+      var gl = function () {
+        return new Token("end");
+      };
+      var bl = function (n: any, l: any) {
+        return new Quantified(n, l);
+      };
+      var kl = "Quantifier";
+      var Tl = function (n: any, l: any) {
+        return l && (n.greedy = !1), n;
+      };
+      var xl = "{";
+      var yl = '"{"';
+      var ml = ",";
+      var Rl = '","';
+      var Fl = "}";
+      var Ql = '"}"';
+      var Sl = function (n: any, l: any) {
+        return new Quantifier(n, l);
+      };
+      var Ul = ",}";
+      var El = '",}"';
+      var Gl = function (n: any) {
+        return new Quantifier(n, 1 / 0);
+      };
+      var Bl = function (n: any) {
+        return new Quantifier(n, n);
+      };
+      var jl = "+";
+      var $l = '"+"';
+      var ql = function () {
+        return new Quantifier(1, 1 / 0);
+      };
+      var Ll = "*";
+      var Ml = '"*"';
+      var Dl = function () {
+        return new Quantifier(0, 1 / 0);
+      };
+      var Hl = "?";
+      var Ol = '"?"';
+      var Wl = function () {
+        return new Quantifier(0, 1);
+      };
+      var zl = /^[0-9]/;
+      var Il = "[0-9]";
+      var Jl = function (n: any) {
+        return +n.join("");
+      };
+      var Kl = "(";
+      var Nl = '"("';
+      var Pl = ")";
+      var Vl = '")"';
+      var Xl = function (n: any) {
+        return n;
+      };
+      var Yl = function (n: any) {
+        return new CaptureGroup(n);
+      };
+      var Zl = "?:";
+      var _l = '"?:"';
+      var nu = function (n: any) {
+        return new Group("non-capture-group", n);
+      };
+      var lu = "?=";
+      var uu = '"?="';
+      var tu = function (n: any) {
+        return new Group("positive-lookahead", n);
+      };
+      var ru = "?!";
+      var eu = '"?!"';
+      var ou = function (n: any) {
+        return new Group("negative-lookahead", n);
+      };
+      var cu = "CharacterSet";
+      var iu = "[";
+      var au = '"["';
+      var fu = "]";
+      var su = '"]"';
+      var hu = function (n:any, l: any) {
+        return new CharSet(!!n, l);
+      };
+      var du = "CharacterRange";
+      var pu = "-";
+      var vu = '"-"';
+      var wu = function (n: any, l: any) {
+        return new CharacterRange(n, l);
+      };
+      var Au = "Character";
+      var Cu = /^[^\\\]]/;
+      var gu = "[^\\\\\\]]";
+      var bu = function (n: string) {
+        return new Literal(n);
+      };
+      var ku = ".";
+      var Tu = '"."';
+      var xu = function () {
+        return new Token("any-character");
+      };
+      var yu = "Literal";
+      var mu = /^[^|\\\/.[()?+*$\^]/;
+      var Ru = "[^|\\\\\\/.[()?+*$\\^]";
+      var Fu = "\\b";
+      var Qu = '"\\\\b"';
+      var Su = function () {
+        return new Token("backspace");
+      };
+      var Uu = function () {
+        return new Token("word-boundary");
+      };
+      var Eu = "\\B";
+      var Gu = '"\\\\B"';
+      var Bu = function () {
+        return new Token("non-word-boundary");
+      };
+      var ju = "\\d";
+      var $u = '"\\\\d"';
+      var qu = function () {
+        return new Token("digit");
+      };
+      var Lu = "\\D";
+      var Mu = '"\\\\D"';
+      var Du = function () {
+        return new Token("non-digit");
+      };
+      var Hu = "\\f";
+      var Ou = '"\\\\f"';
+      var Wu = function () {
+        return new Token("form-feed");
+      };
+      var zu = "\\n";
+      var Iu = '"\\\\n"';
+      var Ju = function () {
+        return new Token("line-feed");
+      };
+      var Ku = "\\r";
+      var Nu = '"\\\\r"';
+      var Pu = function () {
+        return new Token("carriage-return");
+      };
+      var Vu = "\\s";
+      var Xu = '"\\\\s"';
+      var Yu = function () {
+        return new Token("white-space");
+      };
+      var Zu = "\\S";
+      var _u = '"\\\\S"';
+      var nt = function () {
+        return new Token("non-white-space");
+      };
+      var lt = "\\t";
+      var ut = '"\\\\t"';
+      var tt = function () {
+        return new Token("tab");
+      };
+      var rt = "\\v";
+      var et = '"\\\\v"';
+      var ot = function () {
+        return new Token("vertical-tab");
+      };
+      var ct = "\\w";
+      var it = '"\\\\w"';
+      var at = function () {
+        return new Token("word");
+      };
+      var ft = "\\W";
+      var st = '"\\\\W"';
+      var ht = function () {
+        return new Token("non-word");
+      };
+      var dt = "\\c";
+      var pt = '"\\\\c"';
+      var vt = "any character";
+      var wt = function (n: string) {
+        return new ControlCharacter(n);
+      };
+      var At = "\\";
+      var Ct = '"\\\\"';
+      var gt = /^[1-9]/;
+      var bt = "[1-9]";
+      var kt = function (n: string) {
+        return new BackReference(n);
+      };
+      var Tt = "\\0";
+      var xt = '"\\\\0"';
+      var yt = /^[0-7]/;
+      var mt = "[0-7]";
+      var Rt = function (n: string[]) {
+        return new Octal(n.join(""));
+      };
+      var Ft = "\\x";
+      var Qt = '"\\\\x"';
+      var St = /^[0-9a-fA-F]/;
+      var Ut = "[0-9a-fA-F]";
+      var Et = function (n: string[]) {
+        return new Hex(n.join(""));
+      };
+      var Gt = "\\u";
+      var Bt = '"\\\\u"';
+      var jt = function (n: string[]) {
+        return new Unicode(n.join(""));
+      };
+      var $t = function () {
+        return new Token("null-character");
+      };
+      var qt = 0;
+      var Lt = 0;
+      var Mt = 0;
+      var Dt = {
+        line: 1,
+        column: 1,
+        seenCR: !1
+      };
+      var Ht = 0;
+      var Ot: any[] = [];
+      var Wt = 0;
         if ("startRule" in el) {
             if (!(el.startRule in ol)) throw new Error("Can't start parsing from rule \"" + el.startRule + '".');
             cl = ol[el.startRule];
         }
-        if (Token.offset = t, Token.text = u, rl = cl(), null !== rl && qt === n.length) return rl;
+        // @ts-ignore
+      if (Token.offset = t, Token.text = u, rl = cl(), null !== rl && qt === n.length) return rl;
+      // @ts-ignore
         throw o(Ot), Lt = Math.max(qt, Ht), new l(Ot, Lt < n.length ? n.charAt(Lt) : null, Lt, r(Lt).line, r(Lt).column);
     }
     return n(l, Error), {
         SyntaxError: l,
         parse: u
     };
-}(), index = 1, cgs = {};
+}(), index = 1, cgs: any = {};
 
 export default parser

@@ -2,23 +2,23 @@
     ## Helpers
 */
 
-import Util from '../util.js';
+import Util from '../util.ts';
 
-export default {
+const helper: any = {
 	// 把字符串的第一个字母转换为大写。
-	capitalize: function(word) {
+	capitalize: function(word: string) {
 		return (word + '').charAt(0).toUpperCase() + (word + '').substr(1)
 	},
 	// 把字符串转换为大写。
-	upper: function(str) {
+	upper: function(str: string) {
 		return (str + '').toUpperCase()
 	},
 	// 把字符串转换为小写。
-	lower: function(str) {
+	lower: function(str: string) {
 		return (str + '').toLowerCase()
 	},
 	// 从数组中随机选取一个元素，并返回。
-	pick: function pick(arr, min, max) {
+	pick: function pick(arr: any, min: number, max: number) {
 		// pick( item1, item2 ... )
 		if (!Util.isArray(arr)) {
 			arr = [].slice.call(arguments)
@@ -61,7 +61,7 @@ export default {
 	            return Math.random() - 0.5
 	        })
 	*/
-	shuffle: function shuffle(arr, min, max) {
+	shuffle: function shuffle(arr: any[], min: number, max: number) {
 		arr = arr || []
 		var old = arr.slice(0),
 			result = [],
@@ -69,7 +69,8 @@ export default {
 			length = old.length;
 		for (var i = 0; i < length; i++) {
 			index = this.natural(0, old.length - 1)
-			result.push(old[index])
+			// @ts-ignore
+      result.push(old[index])
 			old.splice(index, 1)
 		}
 		switch (arguments.length) {
@@ -80,8 +81,8 @@ export default {
 				max = min
 					/* falls through */
 			case 3:
-				min = parseInt(min, 10)
-				max = parseInt(max, 10)
+				min = parseInt(min + "", 10)
+				max = parseInt(max + "", 10)
 				return result.slice(0, this.natural(min, max))
 		}
 	},
@@ -95,16 +96,19 @@ export default {
 
 	    不支持单独调用！
 	*/
-	order: function order(array) {
+	order: function order(array: any[]) {
+    // @ts-ignore
 		order.cache = order.cache || {}
 
 		if (arguments.length > 1) array = [].slice.call(arguments, 0)
 
 		// options.context.path/templatePath
+    // @ts-ignore
 		var options = order.options
 		var templatePath = options.context.templatePath.join('.')
 
-		var cache = (
+		var cache: any = (
+      // @ts-ignore
 			order.cache[templatePath] = order.cache[templatePath] || {
 				index: 0,
 				array: array
@@ -114,3 +118,5 @@ export default {
 		return cache.array[cache.index++ % cache.array.length]
 	}
 }
+
+export default helper;

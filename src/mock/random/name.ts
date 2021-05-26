@@ -3,7 +3,7 @@
 
     [Beyond the Top 1000 Names](http://www.ssa.gov/oact/babynames/limits.html)
 */
-export default {
+const name: any =  {
 	// 随机生成一个常见的英文名。
 	first: function() {
 		var names = [
@@ -43,7 +43,7 @@ export default {
 			// or this.capitalize(this.word())
 	},
 	// 随机生成一个常见的英文姓名。
-	name: function(middle) {
+	name: function(middle: boolean) {
 		return this.first() + ' ' +
 			(middle ? this.first() + ' ' : '') +
 			this.last()
@@ -85,3 +85,5 @@ export default {
 		return this.cfirst() + this.clast()
 	}
 }
+
+export default name;

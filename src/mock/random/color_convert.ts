@@ -4,16 +4,16 @@
     http://blog.csdn.net/idfaya/article/details/6770414
         颜色空间RGB与HSV(HSL)的转换
 */
-// https://github.com/harthur/color-convert/blob/master/conversions.js
+// https://github.com/harthur/color-convert/blob/master/conversions.ts
 export default {
-	rgb2hsl: function rgb2hsl(rgb) {
+	rgb2hsl: function rgb2hsl(rgb: number[]) {
 		var r = rgb[0] / 255,
 			g = rgb[1] / 255,
 			b = rgb[2] / 255,
 			min = Math.min(r, g, b),
 			max = Math.max(r, g, b),
 			delta = max - min,
-			h, s, l;
+			h: number, s:number, l: number;
 
 		if (max == min)
 			h = 0;
@@ -24,7 +24,7 @@ export default {
 		else if (b == max)
 			h = 4 + (r - g) / delta;
 
-		h = Math.min(h * 60, 360);
+		h = Math.min(h! * 60, 360);
 
 		if (h < 0)
 			h += 360;
@@ -40,14 +40,16 @@ export default {
 
 		return [h, s * 100, l * 100];
 	},
-	rgb2hsv: function rgb2hsv(rgb) {
+	rgb2hsv: function rgb2hsv(rgb: number[]) {
 		var r = rgb[0],
 			g = rgb[1],
 			b = rgb[2],
 			min = Math.min(r, g, b),
 			max = Math.max(r, g, b),
 			delta = max - min,
-			h, s, v;
+			h: number;
+		var s: number;
+		var v: number;
 
 		if (max === 0)
 			s = 0;
@@ -63,16 +65,16 @@ export default {
 		else if (b == max)
 			h = 4 + (r - g) / delta;
 
-		h = Math.min(h * 60, 360);
+		let h1 = Math.min(h! * 60, 360);
 
-		if (h < 0)
-			h += 360;
+		if (h1 < 0)
+			h1 += 360;
 
 		v = ((max / 255) * 1000) / 10;
 
-		return [h, s, v];
+		return [h1, s, v];
 	},
-	hsl2rgb: function hsl2rgb(hsl) {
+	hsl2rgb: function hsl2rgb(hsl: number[]) {
 		var h = hsl[0] / 360,
 			s = hsl[1] / 100,
 			l = hsl[2] / 100,
@@ -109,7 +111,7 @@ export default {
 
 		return rgb;
 	},
-	hsl2hsv: function hsl2hsv(hsl) {
+	hsl2hsv: function hsl2hsv(hsl: number[]) {
 		var h = hsl[0],
 			s = hsl[1] / 100,
 			l = hsl[2] / 100,
@@ -120,7 +122,7 @@ export default {
 		sv = (2 * s) / (l + s);
 		return [h, sv * 100, v * 100];
 	},
-	hsv2rgb: function hsv2rgb(hsv) {
+	hsv2rgb: function hsv2rgb(hsv: number[]) {
 		var h = hsv[0] / 60
 		var s = hsv[1] / 100
 		var v = hsv[2] / 100
@@ -148,7 +150,7 @@ export default {
 				return [v, p, q]
 		}
 	},
-	hsv2hsl: function hsv2hsl(hsv) {
+	hsv2hsl: function hsv2hsl(hsv: number[]) {
 		var h = hsv[0],
 			s = hsv[1] / 100,
 			v = hsv[2] / 100,
@@ -162,16 +164,17 @@ export default {
 	},
 	// http://www.140byt.es/keywords/color
 	rgb2hex: function(
-		a, // red, as a number from 0 to 255
-		b, // green, as a number from 0 to 255
-		c // blue, as a number from 0 to 255
+		a: number, // red, as a number from 0 to 255
+		b: number, // green, as a number from 0 to 255
+		c: number // blue, as a number from 0 to 255
 	) {
 		return "#" + ((256 + a << 8 | b) << 8 | c).toString(16).slice(1)
 	},
 	hex2rgb: function(
-		a // take a "#xxxxxx" hex string,
+		a: any // take a "#xxxxxx" hex string,
 	) {
-		a = '0x' + a.slice(1).replace(a.length > 4 ? a : /./g, '$&$&') | 0;
+		// @ts-ignore
+    a = '0x' + a.slice(1).replace(a.length > 4 ? a : /./g, '$&$&') | 0;
 		return [a >> 16, a >> 8 & 255, a & 255]
 	}
 }

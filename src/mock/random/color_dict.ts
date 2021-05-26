@@ -1,9 +1,31 @@
+export interface Dict {
+  navy: { nicer: string; value: string };
+  blue: { nicer: string; value: string };
+  aqua: { nicer: string; value: string };
+  teal: { nicer: string; value: string };
+  olive: { nicer: string; value: string };
+  green: { nicer: string; value: string };
+  lime: { nicer: string; value: string };
+  yellow: { nicer: string; value: string };
+  orange: { nicer: string; value: string };
+  red: { nicer: string; value: string };
+  maroon: { nicer: string; value: string };
+  fuchsia: { nicer: string; value: string };
+  purple: { nicer: string; value: string };
+  silver: { nicer: string; value: string };
+  gray: { nicer: string; value: string };
+  black: { nicer: string; value: string };
+  white: { nicer: string; value: string };
+}
+
+export type DictKeys = keyof Dict;
+
 /*
     ## Color 字典数据
 
     字典数据来源 [A nicer color palette for the web](http://clrs.cc/)
 */
-export default {
+const dict: Dict =  {
     // name value nicer
     navy: {
         value: '#000080',
@@ -74,3 +96,5 @@ export default {
         nicer: '#FFFFFF'
     }
 }
+
+export default dict;

@@ -1,7 +1,7 @@
 /*
     ## Web
 */
-export default {
+const web: any =  {
     /*
         随机生成一个 URL。
 
@@ -18,7 +18,7 @@ export default {
             telnet rlogin tn3270    Reference to interactive sessions
             wais                    Wide Area Information Servers
     */
-    url: function(protocol, host) {
+    url: function(protocol: boolean, host: boolean) {
         return (protocol || this.protocol()) + '://' + // protocol?
             (host || this.domain()) + // host?
             '/' + this.word()
@@ -31,7 +31,7 @@ export default {
         )
     },
     // 随机生成一个域名。
-    domain: function(tld) {
+    domain: function(tld: string) {
         return this.word() + '.' + (tld || this.tld())
     },
     /*
@@ -57,7 +57,7 @@ export default {
         )
     },
     // 随机生成一个邮件地址。
-    email: function(domain) {
+    email: function(domain: string) {
         return this.character('lower') + '.' + this.word() + '@' +
             (
                 domain ||
@@ -74,3 +74,5 @@ export default {
             this.natural(0, 255)
     }
 }
+
+export default web;

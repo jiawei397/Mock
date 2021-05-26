@@ -22,10 +22,10 @@
 		```
  */
 
-import Constant from './constant.js'
-import Random from './random/index.js'
+import Constant from './constant.ts'
+import Random from './random/index.ts'
 
-export function parse(name) {
+export function parse(name: undefined | string) {
 		name = name == undefined ? '' : (name + '')
 
 		var parameters = (name || '').match(Constant.RE_KEY)
@@ -35,15 +35,17 @@ export function parse(name) {
 		var max = range && range[2] && parseInt(range[2], 10) // || 1
 			// repeat || min-max || 1
 			// var count = range ? !range[2] && parseInt(range[1], 10) || Random.integer(min, max) : 1
-		var count = range ? !range[2] ? parseInt(range[1], 10) : Random.integer(min, max) : undefined
+		// @ts-ignore
+  var count = range ? !range[2] ? parseInt(range[1], 10) : Random.integer(min, max) : undefined
 
 		var decimal = parameters && parameters[4] && parameters[4].match(Constant.RE_RANGE)
 		var dmin = decimal && decimal[1] && parseInt(decimal[1], 10) // || 0,
 		var dmax = decimal && decimal[2] && parseInt(decimal[2], 10) // || 0,
 			// int || dmin-dmax || 0
-		var dcount = decimal ? !decimal[2] && parseInt(decimal[1], 10) || Random.integer(dmin, dmax) : undefined
+		// @ts-ignore
+  var dcount = decimal ? !decimal[2] && parseInt(decimal[1], 10) || Random.integer(dmin, dmax) : undefined
 
-		var result = {
+		var result: any = {
 			// 1 name, 2 inc, 3 range, 4 decimal
 			parameters: parameters,
 			// 1 min, 2 max
